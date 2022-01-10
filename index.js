@@ -23,13 +23,11 @@ server.get('/', function (req, res) {
 })
 
 server.get('/lista-pessoas', function (req, res) {
-        var tipo = "PESSOAS";
-        res.render('listaPessoas', {pessoas, tipo});
+        res.render('listaPessoas', {pessoas});
 })
 
 server.get('/lista-livros', function (req, res) {
-    var tipo = "LIVROS";
-    res.render('listaLivros', {livros,tipo});
+    res.render('listaLivros', {livros});
 })
 
 
@@ -56,13 +54,15 @@ server.get('/formulario-livros', (req, res) => {
 server.post('/adicionarItem', (req, res) => {
     quantidadePessoas++;
     pessoas.push({id: quantidadePessoas,nome: req.body.nome, idade: req.body.idade});
-    res.send('adicionado');    
+    var msg = "Adicionado";
+    res.render('resposta', {msg});    
 })
 
 server.post('/adicionarItemLivro', (req, res) => {
     quantidadeLivros++;
     livros.push({id: quantidadeLivros, nome: req.body.nome});
-    res.send('adicionado');    
+    var msg = "Adicionado";
+    res.render('resposta', {msg});    
 })
 
 server.post('/alterar-livro-form', (req, res) => {
@@ -81,28 +81,53 @@ server.post('/alterar-pessoa-form', (req, res) => {
 
 
 server.post('/alterar-livro', (req, res) => {
-    livros[req.body.id] = {id: req.body.id,nome: req.body.nome}; 
-    
-    res.send('adicionado');
+    var idn = req.body.id; 
+    var i;
+    for(i=0;i<livros.length;i++){
+        if(livros[i].id == idn){
+            livros[i] = {id: req.body.id,nome: req.body.nome}; 
+        }
+    }
+    var msg = "Adicionado";
+    res.render('resposta', {msg});
 });
 
 server.post('/alterar-pessoa', (req, res) => {
-    pessoas[req.body.id] = {id: req.body.id,nome: req.body.nome, idade: req.body.idade}; 
-    
-    res.send('adicionado');
+    var idn = req.body.id; 
+    var i;
+    for(i=0;i<pessoas.length;i++){
+        if(pessoas[i].id == idn){
+            pessoas[i] = {id: req.body.id,nome: req.body.nome, idade: req.body.idade}; 
+        }
+    } 
+    var msg = "Adicionado";
+    res.render('resposta', {msg});
 });
 
 
 server.post('/deletar-pessoa', (req, res) => {
-    const { index } = req.body.id; 
-    pessoas.splice(index, 1);
-    return res.send("Removido");
+    var idn = req.body.id; 
+    var i;
+    for(i=0;i<pessoas.length;i++){
+        if(pessoas[i].id == idn){
+            pessoas.splice(i, 1);
+        }
+    }
+    var msg = "Removido";
+    res.render('resposta', {msg});
 });  
 
 server.post('/deletar-livro', (req, res) => {
-    const { index } = req.body.id; 
-    livros.splice(index, 1);
-    return res.send("Removido");
+    var idn = req.body.id; 
+    var i;
+    for(i=0;i<livros.length;i++){
+        if(livros[i].id == idn){
+            livros.splice(i, 1);
+        }
+    }
+
+    var msg = "Removido";
+    res.render('resposta', {msg});
 }); 
 
 server.listen(3000); 
